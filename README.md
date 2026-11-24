@@ -1,89 +1,302 @@
-# BrandLedger: every claim gets a receipt
+BrandLedger
+Trustworthy content. Verified facts. Accountable publishing.
+BrandLedger is a brand-content verification platform that helps teams
+ensure every number, name, term, and promise in their content is
+supported by an approved source.
 
-BrandLedger checks every number, name, term and promise in a draft against a versioned Brand Source of Truth (each fact has an owner, a source and an expiry date), shows the approved source and a suggested fix, and lets a human decide. When it is unsure it abstains and asks the fact owner. When a fact changes, a reverse check finds published content that still carries the old claim. Every publish is sealed with a hash-linked receipt.
+It connects content creators with a versioned Brand Source of Truth,
+surfaces evidence behind claims, and keeps people in control of every
+correction and publishing decision. When reliable evidence is
+unavailable, BrandLedger abstains and routes the claim to the
+responsible fact owner rather than guessing.
 
-This package merges the Round 2 single-file prototype (`index.html`) with the corrected full-stack build.
+When approved facts change, BrandLedger identifies published content
+that may contain outdated information. Every publishing decision is
+recorded in an auditable, hash-linked receipt.
+Overview
+BrandLedger brings brand governance, content verification,
+collaboration, and accountability together in one workspace.
+Core capabilities
+- Role-based workspaces --- dedicated experiences for Writers,
+  Fact Owners, Brand Managers, and Admins.
+- Brand Source of Truth --- centrally managed facts with owners,
+  sources, versions, and expiry dates.
+- Intelligent claim inspection --- identifies prices, percentages,
+  dates, promises, and brand terminology in content.
+- Evidence explorer --- presents approved facts, supporting source
+  quotes, and suggested corrections.
+- Human-led correction workflow --- users can accept a correction,
+  dispute it with a reason, or request input from the fact owner.
+- Image text verification --- extracts banner text in the browser
+  using Tesseract.js and sends the extracted claims through the
+  verification workflow.
+- Cite or abstain --- unsupported claims are routed to the
+  appropriate fact owner instead of being presented as verified.
+- Owner inbox --- gives fact owners a dedicated place to respond
+  to verification requests.
+- Review and publishing workflow --- supports review progress,
+  trust scoring, approval, and publishing.
+- Tamper-evident receipts --- creates SHA-256 hash-linked claim
+  receipts for publishing decisions.
+- Reverse impact analysis --- identifies published items that may
+  still contain an older version of a changed fact.
+- Audit trail --- records decisions with the responsible actor,
+  role, timestamp, justification, and comments.
+- Compliance reporting --- provides report export for governance
+  and review.
+- Quality analytics --- presents precision, recall, a confusion
+  matrix, known coverage gaps, and reverse-check performance.
+- API access --- provides content verification endpoints and
+  interactive API documentation.
+- BrandLedger Guard extension --- brings claim verification into
+  ChatGPT and supports selected-text verification on websites.
+Product experience
+BrandLedger includes 22 application pages in a unified interface,
+with light and dark themes and voice support.
 
-## Quick start (no install)
-Double-click `index.html`. Internet is needed for Google Fonts and, the first time you run OCR on your own image, to download the Tesseract.js reader. Pick a door on the sign-in page and enter your name.
+The application is organized around four role workspaces:
+  Workspace                           Purpose
+  Writer                          Prepare content, inspect claims,
+review evidence, and submit
+corrections for approval.
 
-Deploy as static: drag this folder to Vercel/Netlify or run `npx serve .`.
+  Fact Owner                      Manage approved facts and respond
+to claims that need authoritative
+information.
 
-## What is inside
-| Path | What it is |
-|---|---|
-| `index.html` | Complete working prototype: 3D animated landing page, door-style sign-in (4 roles, asks for your name), real in-browser OCR upload, 22 pages (incl. Quality), light/dark, voice, hash-chained receipts. All data in localStorage. |
-| `fullstack/backend` | FastAPI + SQLAlchemy: claim extractor, rules engine, retriever, cite-or-abstain verifier, validator, ledger, review and reverse-check APIs. |
-| `fullstack/frontend` | React 19 + Vite source of the dashboard. |
-| `extension/` | Chrome Manifest V3 "BrandLedger Guard": verifies ChatGPT answers claim by claim against your hosted API. |
-| `docs/` | Architecture and Responsible AI disclosure. |
+  Brand Manager                   Review content, monitor trust and
+quality, approve publication, and
+manage compliance.
+Admin                           Access platform configuration, API
+tools, audit information, roles,
+and system-level views.
+How BrandLedger works
+1. Create content --- a user submits a draft, banner, or supported
+   chat response for review.
+2. Extract claims --- BrandLedger identifies supported claim types
+   and their positions in the content.
+3. Evaluate claims --- its rules engine checks values and
+   terminology against the approved brand information.
+4. Retrieve evidence --- the system searches approved, unexpired
+   facts and associates relevant source material.
+5. Validate citations --- cited facts and source quotes are checked
+   against the ledger.
+6. Route the decision --- claims are marked VERIFIED,
+   FLAGGED, or ABSTAIN. Unsupported claims can be sent to their
+   fact owner.
+7. Review and publish --- a human makes the final decision, with a
+   written reason required for disputes or overrides.
+8. Record the receipt --- the publishing decision is added to a
+   SHA-256 hash-linked receipt chain.
+9. Track changes --- when a fact is updated, reverse impact
+   analysis identifies published content that may need another review.
+Technology stack
+  Layer                               Technologies
+  Web application                     React 19, Vite, HTML, CSS,
+JavaScript
 
-## Demo script (5 minutes)
-1. Landing page: watch the draft type itself and get checked, apply the fixes and seal it, change F-021 on the pinboard to see stale items, click through the pipeline, try to cheat a receipt.
-2. Open the **Writer** door and enter your name. Then: Check content > Load sample > Check claims. Click a highlighted claim to open the Evidence explorer.
-3. Correction studio: Apply all fixes, or Dispute (reason dialog) / Ask owner. Submit for review.
-4. Sign in as **Fact Owner**: Owner inbox > answer the ticket. Ledger: change F-021 and watch the reverse-check count rise.
-5. Sign in as **Brand Manager**: Review queue (progress bar, trust score) > Approve and publish > Claim receipts > Simulate tampering > Export compliance report.
-6. **Admin**: API playground, Browser extension simulator, Audit trail, Roles, Settings, Architecture and AI.
+  Backend API                         Python, FastAPI, SQLAlchemy
 
-## Run the full stack (optional)
-```
-cd fullstack/backend && pip install -r requirements.txt && python -m uvicorn app.main:app --port 8000
-cd fullstack/frontend && npm install && npm run dev
-```
-In `index.html` > API playground, "Send to live backend" calls `POST /api/v1/guard` on your running backend. Load `extension/` as described in the Round 3 section below.
-For Vercel, deploy the `fullstack` folder as its own project; set `DATABASE_URL` to a managed Postgres for durable audit history.
+  Database                            PostgreSQL for hosted deployments;
+SQLite for local development
 
-## Responsible AI disclosure
-Verification in `index.html` is deterministic rules plus keyword retrieval with no LLM call. OCR runs in your browser with Tesseract.js (script and language data load from a CDN); uploaded images are never sent anywhere, and the two sample banners fall back to their known text when offline. Sign-in is demo-only: the name you enter is stored in your browser and written to the audit trail. All data is fictional. The backend can use an LLM provider under a cite-or-abstain contract. Built with AI assistance (Claude).
+  Content verification                Claim extraction, deterministic
+rules, keyword retrieval,
+cite-or-abstain validation
 
-Team NEXORA, Sri Krishna College of Engineering and Technology.
+  Image text extraction               Tesseract.js running in the browser
 
-## Round 3, Improvement 2: measured accuracy and impact
+  Browser integration                 Chrome Extension, Manifest V3,
+JavaScript
 
-Open **Quality** (Brand Manager, Fact Owner, Admin) for per-claim-type precision and recall, a confusion matrix,
-the engine's known misses, and the reverse-check timing. Run `node quality/test_quality.js` to enforce the
-thresholds. Details: `quality/README.md`.
+  Integrity and audit                 SHA-256 hash-linked receipts and
+decision audit records
+Deployment                          Vercel, Render, Docker, managed
+PostgreSQL
+System architecture
+BrandLedger is composed of three primary parts:
+- Web application --- provides the role-based workspaces, content
+  review experience, evidence views, reporting, and browser-based OCR.
+- FastAPI backend --- manages the verification pipeline, brand
+  fact ledger, review workflows, owner requests, reverse checks, and
+  audit records.
+- BrandLedger Guard extension --- connects supported browser
+  experiences to the hosted HTTPS API and presents verification
+  results alongside ChatGPT responses.
+The web application and extension communicate with the backend through
+API endpoints. The backend uses the configured database to persist
+facts, decisions, review activity, published assets, and audit history.
+Verification principles
+BrandLedger is designed around four principles:
+1. Evidence before approval --- verification is tied to approved
+   facts and source material.
+2. Abstention over guessing --- unsupported claims are escalated
+   rather than treated as verified.
+3. Human accountability --- people retain control over corrections
+   and publishing decisions.
+4. Traceable change --- fact versions, decisions, and publishing
+   receipts support an auditable content history.
+BrandLedger Guard --- Chrome extension
+BrandLedger Guard connects content verification to the ChatGPT web
+experience.
 
-## Round 3, Improvement 3: live Chrome extension (ChatGPT) on a hosted API
+Its key capabilities include:
+- Adds a Verify with BrandLedger action beneath ChatGPT responses.
+- Evaluates extracted claims through the hosted POST /api/v1/guard
+  endpoint.
+- Displays VERIFIED, FLAGGED, or ABSTAIN results for
+  individual claims.
+- Presents supporting source information and approved corrections for
+  flagged claims.
+- Provides a copy action for suggested corrections.
+- Routes unsupported claims to the relevant fact owner.
+- Supports selected-text verification through the extension popup on
+  websites.
+- Uses a background service worker for API communication, timeouts,
+  and retry handling.
+- Provides an Options page for the hosted API address and optional API
+  key.
+The extension uses the hosted HTTPS API and is designed without a
+localhost dependency.
+Backend API
+The FastAPI service provides the application with a shared verification
+and data layer.
 
-**What it does.** On chatgpt.com the extension adds a "Verify with BrandLedger" button under every ChatGPT answer. The answer is sent to your hosted `POST /api/v1/guard`; each extracted claim comes back as **VERIFIED**, **FLAGGED** or **ABSTAIN**. Flagged claims show the evidence (approved source quote, fact id, owner) and the approved correction with a Copy button. ABSTAIN claims are routed to the fact owner. The popup still verifies any selected text on any site. There is no localhost dependency anywhere in the extension.
+Key API capabilities include:
+- Content verification through POST /api/v1/guard.
+- Image/OCR claim verification through /guard/ocr.
+- Service and database health information through
+  GET /api/v1/health.
+- Ledger, review, decision, and audit-related endpoints.
+- Interactive OpenAPI documentation at /docs.
+The backend supports environment-based configuration for the database
+connection, CORS origins, and optional API-key protection.
+Quality and evaluation
+BrandLedger includes a repeatable evaluation suite based on synthetic
+drafts and hand-labelled claim examples.
 
-**What changed.**
-| File | Change |
-|---|---|
-| `extension/manifest.json` | v1.1.0, ChatGPT content script, HTTPS-only host access, options page, localhost removed |
-| `extension/background.js` | Only component that calls the API: timeout, retries on 5xx/429/network, clear auth/network errors |
-| `extension/chatgpt.js`, `chatgpt.css` | ChatGPT integration and claim cards; optional auto-verify after streaming ends |
-| `extension/options.html/js` | Hosted API URL, optional API key, "Test connection" (calls `/api/v1/health`) |
-| `extension/lib.js`, `popup.*` | Shared rendering (HTML-escaped), popup reworked to use the hosted API |
-| `backend/app/main.py`, `config.py`, `api/guard.py` | `GET /api/v1/health` (checks DB), env-driven CORS, optional `GUARD_API_KEY`, `postgres://` URL normalisation |
-| `backend/requirements.txt`, `Dockerfile`, `.env.example`, `render.yaml` | Uvicorn + PostgreSQL driver, container build, one-click Render blueprint |
+The current evaluation covers 66 synthetic drafts and 82 labelled
+sentences across six categories: clean content, incorrect numbers,
+outdated values, expired facts, unsupported promotions, and terminology.
 
-### 1. Deploy the API publicly (pick one)
-**Render (backend + free PostgreSQL):** push this project to GitHub, then Render > New > Blueprint > select the repo. `render.yaml` creates the web service and a Postgres database, wires `DATABASE_URL`, and generates `GUARD_API_KEY` (copy it from the service's Environment tab). Your URL will look like `https://brandledger-api.onrender.com`.
+Reported results:
 
-**Vercel:** deploy the `fullstack` folder (existing `vercel.json`). In Project Settings > Environment Variables set `DATABASE_URL` (managed Postgres, e.g. Neon/Supabase) and optionally `GUARD_API_KEY`. Without `DATABASE_URL` it falls back to SQLite in `/tmp`, which is **not** durable.
+  Metric                                                           Result
+  Accuracy                                                          87.8%
+Macro F1                                                           0.90
+Fix accuracy                                                    29 / 31
+Reverse-check recall                                      82 / 82 items
+Reverse-check comparison          100% versus 33% for exact-text search
+Chrome extension client tests                          15 passing tests
 
-Environment variables: `DATABASE_URL` (`postgres://` or `postgresql://` accepted), `GUARD_API_KEY` (optional), `CORS_ORIGINS` (default `*`). Tables are created and seeded on first start (`init_db()` / `seed_database()`); there are no schema changes in this round, so no new migration is needed.
+The Quality workspace also presents per-claim-type precision and recall,
+a confusion matrix, known coverage gaps, and reverse-check timing.
+Responsible AI and data handling
+BrandLedger is designed to make verification decisions explainable and
+accountable.
+- The current web prototype uses deterministic rules and keyword
+  retrieval for verification.
+- Browser-based OCR uses Tesseract.js to extract text from images.
+- Image processing in the prototype takes place in the browser;
+  uploaded images are not sent to a separate image-processing service.
+- Claims without adequate approved evidence are abstained from and can
+  be routed to a fact owner.
+- Suggested corrections are presented for human review rather than
+  applied automatically.
+- Audit records preserve decision context, including the actor, role,
+  timestamp, and justification.
+- Demo content is fictional.
+The backend architecture can support an LLM provider under the same
+cite-or-abstain approach, where claims must remain grounded in approved
+evidence.
+Project structure
+BrandLedger/
+├── index.html
+├── fullstack/
+│   ├── backend/
+│   │   ├── app/
+│   │   ├── requirements.txt
+│   │   └── Dockerfile
+│   └── frontend/
+├── extension/
+│   ├── manifest.json
+│   ├── background.js
+│   ├── chatgpt.js
+│   ├── options.html
+│   └── test/
+├── quality/
+│   ├── README.md
+│   └── test_quality.js
+└── docs/
+Getting started
+Run the browser prototype
+Open index.html in a modern browser. Internet access is used for
+Google Fonts and for loading the Tesseract.js OCR library and language
+data when needed.
 
-Check it: open `https://<your-host>/api/v1/health`. Expect `"status":"ok"`, `"database":"postgresql"`, and `active_facts` greater than 0.
+The prototype includes the role-based demo experience and browser-local
+demo data.
+Run the full-stack application locally
+Start the backend:
+cd fullstack/backend
+pip install -r requirements.txt
+python -m uvicorn app.main:app --port 8000
+In a separate terminal, start the frontend:
+cd fullstack/frontend
+npm install
+npm run dev
+Configuration
+The backend supports the following environment variables:
+  Variable                            Purpose
+  DATABASE_URL                      Database connection string. Use
+managed PostgreSQL for durable
+hosted data.
 
-### 2. Install the extension
-1. Chrome > `chrome://extensions` > turn on **Developer mode** > **Load unpacked** > select the `extension/` folder.
-2. The Options page opens. Enter your API URL, the API key if you set one, click **Test connection** (it must show `database: postgresql`), then **Save**. Chrome asks permission for your API host; allow it.
-3. Open chatgpt.com, ask a question that mentions prices/uptime/guarantees (for example: "Write two sentences promoting BrandLedger Guard with its price and uptime guarantee"). Click **Verify with BrandLedger** under the answer.
+  GUARD_API_KEY                     Optional API key for protected
+guard requests.
+CORS_ORIGINS                      Allowed browser origins for API
+access.
+For hosted deployments, configure DATABASE_URL with a managed
+PostgreSQL connection. The application also supports SQLite for local
+development.
+Deployment
+The project supports a separated frontend and backend deployment.
+- Frontend: deploy the fullstack/frontend application through
+  Vercel.
+- Backend: deploy the FastAPI service through Render using the
+  included Docker configuration and render.yaml blueprint.
+- Database: connect the hosted backend to managed PostgreSQL
+  through DATABASE_URL.
+- Browser extension: configure BrandLedger Guard to use the
+  deployed HTTPS API.
+The Render blueprint is configured to provision the backend service and
+PostgreSQL database, connect the database through environment
+configuration, and generate the optional guard API key.
+Roadmap
+Next 30 days --- improve verification coverage
+- Add stronger handling for spelled-out numbers and abbreviated values
+  such as 10k.
+- Expand the labelled evaluation dataset from 82 to 300 sentences.
+- Introduce individual email accounts and role invitations.
+60--90 days --- extend integrations
+- Expand browser verification support to Gemini and Claude.
+- Prepare BrandLedger Guard for Chrome Web Store publication.
+- Add Slack and CMS integrations that can invoke verification before
+  content is published.
+6 months --- scale governance and trust
+- Introduce semantic retrieval using pgvector.
+- Expand to multi-brand workspaces and SSO.
+- Add signed receipts and an exportable compliance package.
+Intended users
+BrandLedger is designed for organizations that publish important facts,
+figures, product claims, and commitments across multiple channels.
 
-### 3. Test
-```
-node extension/test/test_extension.js     # 15 client tests: rendering, XSS escaping, retries, auth, errors
-node quality/test_quality.js              # existing accuracy thresholds
-curl https://<your-host>/api/v1/health
-curl -X POST https://<your-host>/api/v1/guard -H "Content-Type: application/json" -H "X-BrandLedger-Key: <key>" -d '{"content":"BrandLedger Guard costs $1 per month and guarantees 100% uptime.","channel":"ChatGPT"}'
-```
-PostgreSQL persistence check: verify a draft, redeploy/restart the service, and confirm `/api/v1/ledger` still returns your facts and `/api/v1/review` history; the data survives because it lives in the managed database, not the container.
-
-### Known limits (read before demoing)
-- ChatGPT's page markup changes often. The extension finds answers via `[data-message-author-role="assistant"]`; if OpenAI changes that attribute, update `SEL` in `extension/chatgpt.js`.
-- Claim extraction is the existing rule-based extractor (prices, percentages, dates, promises, brand terms). It checks those claim types, not arbitrary prose.
-- Free hosts sleep when idle; the first request can take about 30 seconds (the extension retries and says so on timeout).
+Potential users include:
+- Brand and marketing teams.
+- Content and communications teams.
+- Compliance and governance teams.
+- Banks and fintech organizations.
+- Consumer brands with frequent product and promotional updates.
+Team
+Team NEXORA
+Sri Krishna College of Engineering and Technology
