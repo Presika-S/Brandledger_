@@ -1,0 +1,18 @@
+# One-click public hosting on Render (free tier): New > Blueprint > pick this repo.
+services:
+  - type: web
+    name: brandledger-api
+    runtime: docker
+    dockerfilePath: ./fullstack/backend/Dockerfile
+    dockerContext: ./fullstack/backend
+    healthCheckPath: /api/v1/health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase: { name: brandledger-db, property: connectionString }
+      - key: GUARD_API_KEY
+        generateValue: true
+      - key: CORS_ORIGINS
+        value: "*"
+databases:
+  - name: brandledger-db
+    plan: free

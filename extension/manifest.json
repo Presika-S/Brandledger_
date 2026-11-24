@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "BrandLedger Guard - Pre-Publish Claim Verifier",
+  "version": "1.1.0",
+  "description": "Verifies claims in ChatGPT answers (and any selected text) against your Brand Source of Truth using your hosted BrandLedger API.",
+  "permissions": ["activeTab", "contextMenus", "storage"],
+  "host_permissions": [
+    "https://chatgpt.com/*",
+    "https://chat.openai.com/*",
+    "https://*.vercel.app/*",
+    "https://*.onrender.com/*"
+  ],
+  "optional_host_permissions": ["https://*/*"],
+  "action": { "default_popup": "popup.html", "default_title": "BrandLedger Guard" },
+  "options_page": "options.html",
+  "background": { "service_worker": "background.js" },
+  "content_scripts": [
+    { "matches": ["<all_urls>"], "js": ["content.js"], "run_at": "document_idle" },
+    {
+      "matches": ["https://chatgpt.com/*", "https://chat.openai.com/*"],
+      "js": ["lib.js", "chatgpt.js"],
+      "css": ["chatgpt.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><title>BrandLedger Guard options</title>
+<style>
+body{font-family:-apple-system,Segoe UI,Roboto,sans-serif;background:#0f172a;color:#f8fafc;max-width:560px;margin:40px auto;padding:0 16px}
+h1{color:#38bdf8;font-size:20px}label{display:block;margin:14px 0 4px;font-size:13px;color:#cbd5e1}
+input[type=text],input[type=password]{width:100%;box-sizing:border-box;padding:9px;border-radius:6px;border:1px solid #334155;background:#1e293b;color:#f1f5f9}
+button{background:#0284c7;color:#fff;border:0;border-radius:6px;padding:9px 14px;font-weight:600;cursor:pointer;margin-right:8px;margin-top:14px}
+button.s{background:#334155}#msg{margin-top:14px;font-size:13px;white-space:pre-wrap}.ok{color:#4ade80}.err{color:#f87171}small{color:#94a3b8}
+</style></head><body>
+<h1>🛡️ BrandLedger Guard &mdash; Options</h1>
+<label for="apiBase">Hosted API URL</label>
+<input id="apiBase" type="text" placeholder="https://your-brandledger-api.onrender.com">
+<small>The public HTTPS URL of your deployed backend (no trailing /api/v1).</small>
+<label for="apiKey">API key (only if the server sets GUARD_API_KEY)</label>
+<input id="apiKey" type="password" placeholder="optional">
+<label><input id="auto" type="checkbox"> Auto-verify ChatGPT answers when they finish streaming</label>
+<button id="test" class="s">Test connection</button><button id="save">Save</button>
+<div id="msg"></div>
+<script src="lib.js"></script><script src="options.js"></script></body></html>

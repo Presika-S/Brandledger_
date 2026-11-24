@@ -1,0 +1,18 @@
+.bl-bar{display:flex;align-items:center;gap:10px;margin:6px 0 4px;font:13px -apple-system,Segoe UI,Roboto,sans-serif}
+.bl-btn{background:#0284c7;color:#fff;border:0;border-radius:999px;padding:5px 12px;font-weight:600;cursor:pointer}
+.bl-btn:hover{background:#0369a1}
+.bl-status{color:#64748b}
+.bl-panel{margin:4px 0 14px;padding:10px;border:1px solid #334155;border-radius:10px;background:#0f172a;color:#e2e8f0;font:13px -apple-system,Segoe UI,Roboto,sans-serif}
+.bl-summary{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.bl-score{font-size:22px;font-weight:800}
+.bl-score-high{color:#4ade80}.bl-score-mid{color:#facc15}.bl-score-low{color:#f87171}
+.bl-claim{background:#1e293b;border-left:3px solid #64748b;border-radius:6px;padding:8px 10px;margin-bottom:6px}
+.bl-VERIFIED{border-left-color:#22c55e}.bl-FLAGGED{border-left-color:#ef4444}.bl-ABSTAIN{border-left-color:#eab308}
+.bl-claim-head{display:flex;justify-content:space-between;gap:8px;font-weight:600}
+.bl-badge{font-size:10px;padding:2px 6px;border-radius:4px;font-weight:700;white-space:nowrap}
+.bl-badge-VERIFIED{background:#14532d;color:#86efac}.bl-badge-FLAGGED{background:#7f1d1d;color:#fca5a5}.bl-badge-ABSTAIN{background:#713f12;color:#fde047}
+.bl-expl{color:#cbd5e1;font-size:12px;margin-top:3px}
+.bl-fix{margin-top:5px;background:#0b1220;color:#38bdf8;padding:6px;border-radius:4px}
+.bl-evidence{margin-top:5px;font-size:11px;color:#94a3b8}
+.bl-copy{margin-left:6px;background:#334155;color:#e2e8f0;border:0;border-radius:4px;padding:1px 6px;cursor:pointer;font-size:11px}
+.bl-error{color:#fca5a5}.bl-error a{color:#38bdf8}
